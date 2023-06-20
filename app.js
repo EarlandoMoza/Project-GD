@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const Car = require("./models/allCar")
+const Merch = require("./models/allMerch")
 const PORT = 3003
 const cors = require('cors')
 require('dotenv/config')
@@ -19,7 +20,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended:false}))
 
 
-// routes
+// routesCar
 app.get('/car', async(req, res) => {
     try {
         const cars = await Car.find({})
@@ -70,6 +71,56 @@ app.put('/car/:id', async(req, res) => {
     }
   })
 
+//routesMerch
+app.get('/merch', async(req, res) => {
+  try {
+      const merchs = await Merch.find({})
+      res.status(200).json(merchs)
+  } catch (error) {
+      res.status(500).json({message:error.message})
+  }
+})
+
+// UNTUK MENCARI BERDASAR KAN ID
+app.get('/merch/:id', async(req, res) => {
+  try {
+      const {id} = req.params
+      const merch = await Merch.findById(id)
+      res.status(200).json(merch)
+  } catch (error) {
+      console.log(error.message);
+      res.status(500).json({message:error.message})
+  }
+})
+
+
+// UNTUK MENAMBAHKAN ISI DARI DATABASE MONGODB
+app.post('/merch', async(req, res) => {
+  try {
+      const merch = await Merch.create(req.body)
+      res.status(200).json(merch)
+  } catch (error) {
+      console.log(error.message);
+      res.status(500).json({message:error.message})
+  }
+})
+
+// UNTUK MENGUPDATE DATABASE /  merch
+app.put('/merch/:id', async(req, res) => {
+  try {
+      const {id} = req.params
+      const merch = await merch.findByIdAndUpdate(id, req.body)
+      // jika kita tidak menemuhkan produk di database 
+      if(!merch) {
+          return res.status(404).json({message:`Cannot find any car with ID ${id}`})
+      }
+      // untuk menampilkan hasil di postman 
+      const updatemerch = await merch.findById(id)
+      res.status(200).json(updatemerch)
+  } catch (error) {
+      res.status(500).json({message:error.message})
+  }
+})
 
 
 mongoose.set("strictQuery",false)

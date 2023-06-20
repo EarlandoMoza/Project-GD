@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garasi Drift</title>
+    <script src="https://docs.vuejs.id/js/vue.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Box Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <!-- Link To CSS -->
@@ -13,7 +15,8 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+    <div id="app">
+        <!-- Navbar -->
     <header>
         <img src="img/logd.png" width="150px" alt="">
         <ul class="navbar">
@@ -28,7 +31,8 @@
         <div class="home-text">
             <h3>More Then Faster</h3>
             <h1>It's Okay To Buy<br /> An Old Car <br />If It's <span>Fun</span></h1>
-            <p>JDM or Japanese Domestic Market is a term that refers to cars that are only made for the Japanese market. JDM cars usually have very high performance and a very distinctive appearance.
+            <p>JDM or Japanese Domestic Market is a term that refers to cars that are only made for the Japanese market.
+                JDM cars usually have very high performance and a very distinctive appearance.
             </p>
             <!-- <a href="#contact" class="btn">Contact Here</a> -->
         </div>
@@ -38,33 +42,20 @@
     </section>
     <!-- Car section -->
     <section class="cars" id="cars">
-        <div class="heading">
-            <p>Car Collection</p>
-            <h2>GARASI DRIFT</h2>
-        </div>
-        <div class="cars-container">
-            <div class="car-box">
-                <img src="img/chef1.png" alt="">
-                <div class="text">
-                    <h2>John Watson</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, doloribus.</p>
-                    <a href="#" class="btn">Hire Now</a>
-                </div>
+       
+            <div class="heading">
+                <p>Car Collection</p>
+                <h2>GARASI DRIFT</h2>
             </div>
-            <div class="car-box">
-                <img src="img/chef2.png" alt="">
-                <div class="text">
-                    <h2>Alexa Gomez</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, doloribus.</p>
-                    <a href="#" class="btn">Hire Now</a>
-                </div>
-            </div>
-            <div class="car-box">
-                <img src="img/chef3.jpg" alt="">
-                <div class="text">
-                    <h2>Richard</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, doloribus.</p>
-                    <a href="#" class="btn">Hire Now</a>
+            <div v-for="data in datacar">
+            <div class="cars-container">
+                <div class="car-box">
+                    <img :src="data.image" alt="">
+                    <div class="text">
+                        <h2>{{data.merk}}</h2>
+                        <h3>{{data.name}}</h3>
+                        <p>{{data.desc}}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,14 +89,40 @@
             <a href="#">Term Of Use</a>
         </div>
         <p>&#169; All Right Reserved @earlandomozaa</p>
-    </section>
+    </section>  
+    </div>
+
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    datacar: [],
+                }
+            },
+            methods: {
+                getcar: function () {
+                    axios.get('https://project-gd.vercel.app/car')
+                        .then(response => {
+                            this.datacar = response.data
+                            console.log(this.datacar);
+                        })
+                },
 
 
+            },
+            mounted() {
+
+                this.getcar()
+            }
+        })
+    </script>
 
 
 
     <!-- Link To Js -->
     <script src="main.js"></script>
+
 </body>
 
 </html>
